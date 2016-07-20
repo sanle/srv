@@ -24,7 +24,12 @@ void process_list(int sock,std::string path, std::vector<std::string> &list)
 	std::regex rex;
 	std::smatch match;
 	std::string file;
+	try
+	{
 	rex.assign("^GET\\s+(/[-=?&./a-zA-Z0-9]*)\\s+HTTP/1.(0|1)");
+	}catch(std::regex_error &e)
+	{
+	}
 	if(!std::regex_search(list[0],match,rex))
 	{
 		std::string message = "HTTP/1.0 400 Bad Request\r\n\r\n";
@@ -118,8 +123,8 @@ void *thread_proc(void * sock)
 		write(fd,buf,size);
 		request.push_back(buf);
 	}while(go);
-	close(fd);
 	process_list(ssocket,path,request);
+	close(fd);
 	shutdown(ssocket,SHUT_RDWR);
 	close(ssocket);
 }

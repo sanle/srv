@@ -162,8 +162,9 @@ int main(int argc, char **argv)
 	listen(soc,SOMAXCONN);
 	while(ssocket = accept(soc,0,0))
 	{
+		int s = ssocket;
 		pthread_t thread;
-		pthread_create(&thread,NULL,thread_proc,&ssocket);
+		pthread_create(&thread,NULL,thread_proc,&s);
 		pthread_detach(thread);
 	}
 	close(soc);

@@ -69,6 +69,7 @@ void process_list(int sock,std::string path, std::vector<std::string> &list)
 	close(fd);
 	send(sock,message.c_str(),message.length(),0);
 	send(sock,filebuf,st.st_size,0);
+	free(filebuf);
 }
 
 void *thread_proc(void * sock)

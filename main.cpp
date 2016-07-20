@@ -79,6 +79,7 @@ void *thread_proc(void * sock)
 	std::vector<std::string> request;
 	bool go = true;
 	bool nl = false;
+	int fd = open("./log.txt",O_APPEND);
 	do
 	{
 		memset(buf,0,1024);
@@ -114,8 +115,10 @@ void *thread_proc(void * sock)
 				}
 			}
 		}
+		write(fd,buf,size);
 		request.push_back(buf);
 	}while(go);
+	close(fd);
 	process_list(ssocket,path,request);
 	shutdown(ssocket,SHUT_RDWR);
 	close(ssocket);

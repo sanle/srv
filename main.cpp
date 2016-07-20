@@ -161,13 +161,15 @@ int main(int argc, char **argv)
 	sa.sin_family=AF_INET;
 	sa.sin_port=htons(port);
 	sa.sin_addr.s_addr = inet_addr(host);
+	int yes =1;
+	setsockopt(soc,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
 	bind(soc,(sockaddr *)&sa,sizeof(sockaddr_in));
 	listen(soc,SOMAXCONN);
 	while(ssocket = accept(soc,0,0))
 	{
 		int s = ssocket;
 		pthread_t thread;
-		pthread_create(&thread,NULL,thread_proc,&s);
+		pthread_create(&thread,NULL,thread_proc,(void *)&s);
 		pthread_detach(thread);
 	}
 	close(soc);

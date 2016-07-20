@@ -32,6 +32,11 @@ void process_list(int sock,std::string path, std::vector<std::string> &list)
 		return;
 	}
 	file = match[1];
+	size_t pos = file.find("?");
+	if(pos != std::string::npos)
+	{
+		file.erase(pos,file.length()-pos);
+	}
 	if(file.length() == 1)
 	{
 		file = "/index.html";
@@ -40,11 +45,6 @@ void process_list(int sock,std::string path, std::vector<std::string> &list)
 	if(path.back() == '/')
 	{
 		path.erase(path.end()-1);
-	}
-	size_t pos = file.find("?");
-	if(pos != std::string::npos)
-	{
-		file.erase(pos,file.length()-pos);
 	}
 	path+=file;
 	int fd = open(path.c_str(),O_RDONLY);

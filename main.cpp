@@ -79,7 +79,7 @@ void *thread_proc(void * sock)
 	std::vector<std::string> request;
 	bool go = true;
 	bool nl = false;
-	int fd = open("./log.txt",O_APPEND);
+	int fd = open("/home/box/log.txt",O_APPEND);
 	do
 	{
 		memset(buf,0,1024);

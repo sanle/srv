@@ -32,6 +32,13 @@ void process_list(int sock,std::string path, std::vector<std::string> &list)
 		return;
 	}
 	file = match[1];
+	if(file.length() == 1)
+	{
+		std::string message = "HTTP/1.0 400 Bad Request\r\n\r\n";
+		send(sock,message.c_str(),message.length(),0);
+		return;
+	}
+	
 	if(path.back() == '/')
 	{
 		path.erase(path.end()-1);

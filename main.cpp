@@ -8,6 +8,7 @@
 #include <vector>
 #include <regex>
 #include <string>
+#include <sstream>
 
 #include <pthread.h>
 #include <linux/limits.h>
@@ -21,22 +22,17 @@ std::string path;
 
 void process_list(int sock,std::string path, std::vector<std::string> &list)
 {
-	std::regex rex;
-	std::smatch match;
-	std::string file;
-	try
-	{
-	rex.assign("^GET\\s+(/[-=?&./a-zA-Z0-9]*)\\s+HTTP/1.(0|1)");
-	}catch(std::regex_error &e)
-	{
-	}
-	if(!std::regex_search(list[0],match,rex))
+	std::stringstream ss(list[0]);
+	std::string method, file, proto;
+	ss>>method;
+	ss>>file;
+	ss>>proto;
+	if(method != "GET" && proto != "HTTP/1.0" && file.front() != '/')
 	{
 		std::string message = "HTTP/1.0 400 Bad Request\r\n\r\n";
 		send(sock,message.c_str(),message.length(),0);
 		return;
 	}
-	file = match[1];
 	size_t pos = file.find("?");
 	if(pos != std::string::npos)
 	{
